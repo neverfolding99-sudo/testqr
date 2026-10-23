@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- TheDevs Admin Panel — logo-mærke -->
+  <defs>
+    <linearGradient id="tdg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2ea043"/>
+      <stop offset="1" stop-color="#1f6feb"/>
+    </linearGradient>
+  </defs>
+  <!-- afrundet kvadrat-baggrund -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#tdg)"/>
+  <!-- kode-klammer </> i hvid -->
+  <path d="M25 20 L15 32 L25 44" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M39 20 L49 32 L39 44" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- node-prik i midten -->
+  <circle cx="32" cy="32" r="4.5" fill="#ffffff"/>
+</svg>

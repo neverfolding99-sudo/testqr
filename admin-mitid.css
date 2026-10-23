@@ -1,0 +1,262 @@
+/* ════════════════════════════════════════════════════════════
+   admin-mitid.css — Admin-konsol i MitID Erhverv 1:1-stil
+   Blå #002a50 header, NemLog-in-look, grøn aktiv-fane #97CD00,
+   IBM Plex Sans, hvide kort med #ccc-rammer (tall-box-stil)
+   ════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%; width: 100%;
+  background: #f0f0f0;
+  font-family: "IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif;
+  font-size: 16px; font-weight: 400;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: #0060e6; }
+h2, h3 { font-weight: 700; }
+
+/* ── HEADER — TheDevs Admin Panel ── */
+.admin-header { background-color: #1a1033; color: #fff; padding: .6rem 1rem; width: 100%; border-bottom: 2px solid #7c3aed; }
+.admin-header a { color: #fff; }
+.admin-header-inner { display: flex; justify-content: space-between; align-items: center; position: relative; min-height: 52px; }
+.admin-logo { display: flex; align-items: center; gap: 12px; }
+.brand-logo-img { height: 36px; width: 36px; display: block; }
+.brand-logo-img-lg { height: 64px; width: 64px; display: block; margin: 0 auto 10px; }
+.brand-name { display: flex; align-items: baseline; gap: 8px; font-size: 1.08rem; font-weight: 700; color: #fff; letter-spacing: .01em; }
+.brand-name small { font-size: .72rem; font-weight: 500; color: #8b949e; letter-spacing: .08em; text-transform: uppercase; }
+.admin-session-pill {
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+  font-family: "IBM Plex Mono", monospace; font-size: .72rem; font-weight: 600;
+  padding: 4px 10px; border-radius: 3px; letter-spacing: .05em;
+}
+.admin-session-pill.live { background: #97CD00; color: #1a2e00; border-color: #97CD00; }
+
+/* ── FANER (grøn aktiv som MitID Erhverv) ── */
+.admin-tabs { background: #002a50; width: 100%; }
+.admin-nav { display: flex; flex-wrap: wrap; gap: 4px; }
+.admin-nav button {
+  background: #0074B3; color: #fff;
+  border: none; border-top: 4px solid transparent;
+  padding: 13px 24px;
+  font-family: inherit; font-weight: 700; font-size: .92rem;
+  cursor: pointer; white-space: nowrap;
+  transition: background .15s;
+}
+.admin-nav button:hover:not(.active) { background: #005a8a; }
+.admin-nav button.active { background: #fff; color: #000; border-top: 4px solid #97CD00; }
+
+/* ── INDHOLD ── */
+.admin-body { width: 100%; max-width: 1240px; margin: 0 auto; padding: 24px 20px 60px; }
+.admin-page-head { margin-bottom: 22px; }
+.admin-page-head h1 { font-size: 1.45rem; font-weight: 700; color: #002a50; margin-bottom: 4px; }
+.admin-page-head p { font-size: .88rem; color: #555; }
+
+.admin-grid { display: grid; grid-template-columns: 1fr 400px; gap: 24px; align-items: start; }
+@media (max-width: 980px) { .admin-grid { grid-template-columns: 1fr; } }
+
+/* ── KORT (tall-box-stil: hvid, #ccc-ramme) ── */
+.admin-card {
+  background: #fff; border: 1px solid #ccc;
+  padding: 26px 28px; margin-bottom: 22px;
+  min-height: 0;
+}
+.admin-card > h2 { font-size: 1rem; font-weight: 700; color: #002a50; margin-bottom: 4px; }
+.admin-card .sub { font-size: .8rem; color: #666; margin-bottom: 20px; line-height: 1.5; }
+.admin-divider { border: none; height: 1px; background: rgba(0,0,0,.1); margin: 18px 0; }
+
+/* ── FORM (MitID-input-stil) ── */
+label { display: block; font-size: .8rem; font-weight: 600; color: #1a1a1a; text-transform: uppercase; letter-spacing: .2px; margin-bottom: 8px; }
+input[type=text], input[type=url], input[type=password], input[type=number], input[type=datetime-local], textarea, select {
+  width: 100%;
+  border: 1px solid #ccc; border-radius: 4px;
+  padding: 0 14px; height: 44px;
+  font-family: inherit; font-size: .95rem; color: #1a1a1a;
+  background: #fff; margin-bottom: 14px;
+  transition: border .2s;
+}
+input:focus, textarea:focus, select:focus { outline: none; border: 2px solid #7c3aed; }
+textarea { height: auto; padding: 10px 14px; resize: vertical; }
+input[readonly] { background: #f5f5f5; color: #666; }
+
+.helper { font-size: .78rem; color: #777; margin: -8px 0 14px; line-height: 1.45; }
+
+/* ── KNAPPER (MitID-knap: blå, uppercase, pil) ── */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 8px 22px;
+  border: none; border-radius: 4px;
+  background: #7c3aed; color: #fff;
+  font-family: inherit; font-size: .9rem; font-weight: 600; letter-spacing: .04em;
+  cursor: pointer; transition: background .2s;
+}
+.btn-primary:hover { background: #6d28d9; }
+.btn-primary:disabled { background: #cccccc; cursor: not-allowed; }
+.btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 8px 18px;
+  border: 1px solid #0060e6; border-radius: 4px;
+  background: #fff; color: #0060e6;
+  font-family: inherit; font-size: .88rem; font-weight: 600;
+  cursor: pointer; transition: background .15s;
+}
+.btn-secondary:hover { background: #ebf5ff; }
+.btn-danger { border-color: #B4453A; color: #B4453A; }
+.btn-danger:hover { background: #fdf0ee; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 4px; }
+.save-msg { font-size: .8rem; color: #2e9e5b; font-weight: 600; opacity: 0; transition: opacity .3s; }
+.save-msg.show { opacity: 1; }
+
+/* ── STATUS-RÆKKE (dot + tekst + toggle) ── */
+.status-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.dot { width: 11px; height: 11px; border-radius: 50%; background: #c8c8c8; flex-shrink: 0; }
+.dot.live { background: #2e9e5b; box-shadow: 0 0 0 4px rgba(46,158,91,.15); animation: pulse 2s infinite; }
+.dot.warn { background: #e8890c; box-shadow: 0 0 0 4px rgba(232,137,12,.15); }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(46,158,91,.3); } 70% { box-shadow: 0 0 0 8px rgba(46,158,91,0); } 100% { box-shadow: 0 0 0 0 rgba(46,158,91,0); } }
+.status-text { font-size: .9rem; font-weight: 600; color: #1a1a1a; }
+.toggle-btn {
+  margin-left: auto; all: unset; cursor: pointer;
+  font-size: .8rem; font-weight: 700; letter-spacing: .06em;
+  padding: 9px 16px; border-radius: 3px;
+  border: 1px solid #0060e6; color: #0060e6;
+  font-family: inherit;
+}
+.toggle-btn:hover { background: #ebf5ff; }
+.toggle-btn.is-on { background: #0060e6; color: #fff; border-color: #0060e6; }
+
+/* ── TABELLER ── */
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th { text-align: left; font-size: .68rem; text-transform: uppercase; letter-spacing: .05em; color: #777; font-weight: 700; padding: 0 12px 10px; border-bottom: 2px solid #e0e0e0; }
+td { padding: 12px 12px; border-bottom: 1px solid #eee; }
+tr:last-child td { border-bottom: none; }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .7rem; font-weight: 700; letter-spacing: .02em; }
+.pill.active { background: #e3f3e9; color: #2e9e5b; }
+.pill.done   { background: #efefef; color: #888; }
+.empty-note { text-align: center; padding: 30px 10px; color: #888; font-size: .85rem; }
+
+/* ── SKABELON-RÆKKE ── */
+.tpl-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid #eee; }
+.tpl-row:last-child { border-bottom: none; }
+.tpl-name { font-weight: 600; color: #002a50; margin-bottom: 2px; }
+.tpl-sub  { font-size: .76rem; color: #777; }
+
+/* ── PREVIEW (kundeside-forhåndsvisning i MitID-stil) ── */
+.preview-box { position: sticky; top: 20px; }
+.preview-frame {
+  background: #fff; border: 1px solid #ccc; padding: 22px;
+}
+.preview-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.preview-head h3 { font-size: .92rem; font-weight: 700; color: #002a50; width: 180px; word-break: break-word; }
+.preview-mitid-logo { height: 1rem; width: 3.813rem; }
+.preview-mitid-logo path { fill: #0060e6; }
+.preview-divider { border: none; height: 1px; background: rgba(0,0,0,.1); margin: 10px 0 14px; }
+.preview-qr-label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .2px; margin-bottom: 12px; }
+#previewQr { width: 200px; height: 200px; margin: 0 auto 10px; background: #fff; border: 1px solid #d0d0d0; padding: 12px; }
+#previewQr svg, #previewQr canvas { display: block; width: 100% !important; height: 100% !important; }
+.preview-status { font-size: .78rem; color: #666; text-align: center; min-height: 18px; }
+.preview-offline {
+  margin: 12px 0; padding: 18px 20px; text-align: center;
+  background: #f2f2f2; border: 1px solid #d9d9d9; border-radius: 4px;
+}
+.preview-offline strong { display: block; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; font-size: .9rem; }
+.preview-offline span { font-size: .8rem; color: #555; }
+.preview-qr-wrap { display: none; }
+.preview-qr-wrap.on { display: block; }
+#qrcode svg, #qrcode canvas { display: block; width: 100% !important; height: 100% !important; }
+
+/* ── TELEGRAM-KORT ── */
+.tg-status-list { font-size: .82rem; color: #555; line-height: 1.7; margin-bottom: 14px; }
+.tg-status-list b { color: #1a1a1a; }
+.tg-ok  { color: #2e9e5b; font-weight: 700; }
+.tg-err { color: #B4453A; font-weight: 700; }
+
+/* ── Preset-chips (færdiglavede handlinger) ── */
+.preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.preset-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 14px;
+  border: 1px solid #7c3aed; border-radius: 999px;
+  background: #fff; color: #7c3aed;
+  font-family: inherit; font-size: .82rem; font-weight: 600;
+  cursor: pointer; transition: all .15s;
+}
+.preset-chip:hover { background: #f5f0fc; transform: translateY(-1px); }
+.preset-chip:active { transform: translateY(0); }
+
+/* ── 2-kolonne række ── */
+.row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 640px) { .row-2col { grid-template-columns: 1fr; } }
+
+/* ── Egen handling (editor + kundens svar) ── */
+.action-editor { margin-top: 4px; }
+.action-svar { font-size: .85rem; font-weight: 600; margin-top: 12px; min-height: 18px; }
+.action-svar.show.ok { color: #2e9e5b; }
+.action-svar.show.cancel { color: #B4453A; }
+.flow-btn.flow-action { border-color: #7B4FBF; }
+.flow-btn.flow-action .flow-num { background: #7B4FBF; color: #fff; }
+.flow-btn.current.flow-action { background: #f5f0fc; border-color: #7B4FBF; }
+
+/* ── FLOW-KNAPPER (kontrol som i det gamle MitID-panel) ── */
+.flow-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.flow-btn {
+  flex: 1; min-width: 170px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  border: 2px solid #ccc; border-radius: 4px;
+  background: #fff; cursor: pointer;
+  font-family: inherit; font-size: .95rem; font-weight: 700;
+  color: #1a1a1a;
+  transition: all .15s;
+}
+.flow-btn .flow-num {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #eee; color: #555; font-size: .85rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.flow-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+.flow-besked { border-color: #97CD00; }
+.flow-besked .flow-num { background: #97CD00; color: #1a2e00; }
+.flow-scan { border-color: #b8b8b8; }
+.flow-scan .flow-num { background: #e8e8e8; color: #555; }
+.flow-wait { border-color: #ffcc00; }
+.flow-wait .flow-num { background: #ffcc00; color: #7a5c00; }
+.flow-approve { border-color: #0060e6; }
+.flow-approve .flow-num { background: #0060e6; color: #fff; }
+.flow-btn.current { box-shadow: 0 0 0 3px rgba(0,96,230,.25); }
+.flow-btn.current.flow-besked { background: #f6ffe8; border-color: #97CD00; }
+.flow-btn.current.flow-scan { background: #f2f2f2; border-color: #888; }
+.flow-btn.current.flow-wait { background: #fffbec; border-color: #e6b800; }
+.flow-btn.current.flow-approve { background: #eef5ff; border-color: #0060e6; }
+.flow-btn:active { transform: translateY(0); }
+.flow-status { font-size: .85rem; color: #555; padding: 10px 12px; background: #f7f7f7; border: 1px solid #e3e3e3; border-radius: 4px; }
+.flow-status b { color: #002a50; }
+
+/* ── CAPTURE (skærmdeling) ── */
+.cam-frame { position: relative; width: 100%; aspect-ratio: 1; background: #0d1b18; border-radius: 6px; overflow: hidden; margin-bottom: 16px; border: 1px solid #ccc; }
+#screenVideo { width: 100%; height: 100%; object-fit: contain; display: block; background: #0d1b18; }
+.cam-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgba(220,242,232,.7); font-size: .8rem; text-align: center; padding: 20px; gap: 6px; }
+.cap-err { color: #B4453A; font-size: .82rem; margin-top: 10px; min-height: 16px; }
+
+/* ── LOGINSKÆRM (MitID-style, #002a50) ── */
+.login-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: stretch; background: #fff; }
+.login-header { background: #002a50; padding: 26px 24px; text-align: center; }
+.login-header img { height: 30px; width: auto; margin-bottom: 8px; }
+.login-header .login-logo-sub { color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .1em; }
+.login-body { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 48px 20px; }
+.login-card {
+  width: 100%; max-width: 420px;
+  background: #fff; border: 1px solid #ccc;
+  padding: 30px;
+}
+.login-card h2 { font-size: 1rem; font-weight: 700; color: #002a50; margin-bottom: 4px; }
+.login-card .sub { font-size: .8rem; color: #666; margin-bottom: 20px; }
+.login-error { color: #B4453A; font-size: .8rem; margin-top: -8px; margin-bottom: 14px; display: none; font-weight: 600; }
+.login-error.show { display: block; }
+.login-code-msg { font-size: .82rem; color: #555; line-height: 1.5; background: #f0f7ff; border: 1px solid #cfe3f8; border-radius: 4px; padding: 10px 12px; }
+.login-security { display: flex; align-items: center; gap: 8px; font-size: .72rem; color: #777; padding: 10px 12px; background: #f7f7f7; border: 1px solid #e3e3e3; border-radius: 4px; margin-top: 22px; }
+.login-security svg { flex-shrink: 0; color: #2e9e5b; }
+
+.hidden { display: none !important; }

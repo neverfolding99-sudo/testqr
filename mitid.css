@@ -1,0 +1,317 @@
+/* ════════════════════════════════════════════════════════════
+   mitid.css — MitID Erhverv login-look, 1:1 kopi af login (2).php
+   + QR-elementer (step-dots, security-info, help-links fra step2.html)
+   ════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%; width: 100%;
+  background: #fff;
+  font-family: "IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif;
+  font-size: 16px; font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header / nav ── (blå #002a50, som MitID Erhverv) ── */
+.custom-header { background-color: #002a50; color: #fff; padding: .6rem 1rem 0; width: 100%; }
+.custom-header a { color: #fff; }
+.header-inner { display: flex; justify-content: space-between; align-items: center; position: relative; }
+
+#menuButton {
+  background: transparent; border: none; padding: .5rem;
+  display: flex; align-items: center; justify-content: center;
+}
+#menuButton svg { width: 24px; height: 24px; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+
+.header-logo-center { display: none; position: absolute; left: 50%; transform: translateX(-50%); }
+.header-logo-center img { height: 28px; width: auto; }
+
+.lang-group { display: flex; align-items: center; gap: 5px; }
+.custom-language-btn {
+  background: #ebf6eb; color: #0467AC;
+  font-size: .7rem; font-weight: 700;
+  border: none; padding: .3rem .6rem; border-radius: .2rem;
+  cursor: pointer;
+}
+.custom-language-btn:hover { background: #d9ecd9; }
+
+.tab-section { display: none; background: #002a50; width: 100%; }
+.custom-nav { display: flex; padding: 0; margin: 0; gap: 5px; }
+.custom-nav a {
+  display: flex; align-items: center; justify-content: center;
+  background: #0074B3; color: #fff;
+  padding: 15px 52px;
+  text-decoration: none; font-weight: 700; font-size: 1rem;
+  border-radius: 0;
+  border-top: 4px solid transparent;
+  white-space: nowrap;
+}
+.custom-nav a.active { background: #fff; color: #000; border-top: 4px solid #97CD00; }
+.custom-nav a:hover:not(.active) { background: #005a8a; }
+
+.collapse { display: none; }
+.collapse.open { display: block; }
+.mobile-menu a {
+  display: block; width: 100%;
+  background: #0074B3; color: #fff;
+  padding: 10px; text-align: center;
+  text-decoration: none; font-weight: 700;
+  margin: 0; border-bottom: 1px solid rgba(255,255,255,.15);
+}
+.mobile-menu a.active { background: #97CD00; color: #000; }
+
+.mitid-bar { background: #0074B3; color: #fff; font-weight: 700; padding: .5rem 1rem; }
+
+/* ── Page ── */
+.page-container { width: 100%; min-height: calc(100vh - 160px); }
+.col-aside { padding-top: 20px; }
+
+/* ── tall-box (login-widget) ── */
+.tall-box {
+  position: relative;
+  width: 90%; max-width: 600px;
+  margin: 20px auto;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #aaa;
+  text-align: left;
+  box-sizing: border-box;
+  min-height: 480px;
+}
+
+/* ── Loader-overlay (Mellem-trin: "Forbinder sikkert til MitID") ── */
+.loader-container {
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: #fff; z-index: 1000;
+}
+.loader-icon { display: flex; justify-content: center; align-items: center; margin-bottom: 30px; width: 90px; height: 40px; }
+.loader-icon path { fill: #0060e6; }
+.loader-shield { display: flex; justify-content: center; align-items: center; width: 120px; height: 120px; position: relative; left: 10px; }
+.loader-shield svg { width: 100%; height: 100%; fill: #0060e6; }
+.rtr {
+  position: absolute;
+  border: 4px solid rgba(255,255,255,.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%; width: 50px; height: 50px;
+  animation: spin 1s linear infinite;
+  top: 30%; left: 20%; transform: translate(-50%,-50%);
+}
+@keyframes spin { 0% { transform: translate(-50%,-50%) rotate(0deg); } 100% { transform: translate(-50%,-50%) rotate(360deg); } }
+.loader-text { margin-top: 20px; text-align: center; font-size: 16px; color: #333; font-weight: 700; }
+.loader-subtext { margin-top: 8px; text-align: center; font-size: 16px; color: #333; }
+
+/* ── Kort-header (overskrift + MitID-logo) ── */
+.header-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.tall-box-heading { width: 243px; font-weight: 700; font-size: 1rem; word-break: break-word; margin: 0; }
+.mitid-core-header__logo { height: 1rem; width: 3.813rem; }
+.mitid-core-header__logo path { fill: #0060e6; }
+.mitid--divider-light { border-radius: 0; height: 1px; border: none; background: rgba(0,0,0,.1); margin: 0 0 16px; }
+
+/* ── Label-række (som "Bruger-ID" / "CPR-nummer" — her "QR-KODE") ── */
+.mitid-tooltip__label { display: inline-flex; align-items: center; padding-bottom: .5rem; }
+.mitid-header-container { display: flex; align-items: center; gap: 8px; }
+.mitid-tooltip__text__tooltip {
+  font-weight: 600 !important; font-size: .875rem !important;
+  line-height: 1.5rem !important; text-transform: uppercase !important;
+  letter-spacing: .2px !important; margin: 0;
+}
+#mitid-popup-toggler { background: none; border: none; padding: 0; margin: 0; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+#mitid-popup-toggler svg { display: block; width: 16px; height: 16px; }
+
+/* ── QR-område ── */
+.qr-zone { text-align: center; padding: 6px 0 2px; }
+.qr-frame-mitid {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+#qrcode { width: 220px; height: 220px; }
+#qrcode svg, #qrcode img, #qrcode canvas { display: block; width: 100% !important; height: 100% !important; }
+
+/* "Åbn MitID appen..." hint + status (fodnote-linje) */
+.qr-hint {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .875rem; font-weight: 600; color: #333;
+  padding: 4px 0 10px;
+}
+.qr-hint svg { flex-shrink: 0; }
+.qr-status-line { font-size: .8125rem; color: #666; min-height: 20px; margin-bottom: 10px; }
+
+/* Offline-besked (når admin har sat offline) */
+.qr-offline {
+  display: inline-block; max-width: 320px; margin: 10px 0 18px;
+  padding: 20px 24px;
+  background: #f2f2f2; border: 1px solid #d9d9d9; border-radius: 4px;
+  text-align: center;
+}
+.qr-offline strong { display: block; font-size: 1rem; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+.qr-offline span { font-size: .875rem; color: #555; }
+
+/* ── Step-dots (fra step2.html) ── */
+.steps { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 10px 0 18px; }
+.step-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #d0d0d0;
+  transition: background .3s;
+}
+.step-dot.completed { background: #0060e6; }
+.step-dot.active {
+  background: #0060e6;
+  box-shadow: 0 0 0 4px rgba(0,96,230,.15);
+  animation: dot-pulse 1.6s infinite;
+}
+@keyframes dot-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(0,96,230,.3); }
+  70%  { box-shadow: 0 0 0 8px rgba(0,96,230,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,96,230,0); }
+}
+
+/* ── Action-box ("Godkend dette køb" / "Annullering af betaling") ── */
+.action-box { text-align: center; padding: 6px 0 4px; }
+.action-amount {
+  font-size: 1.6rem; font-weight: 700; color: #002a50;
+  margin-bottom: 6px; font-variant-numeric: tabular-nums;
+}
+.action-amount:empty { display: none; }
+.action-title { font-size: 1rem; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; line-height: 1.4; }
+.action-detail {
+  font-size: .8rem; color: #777; margin-bottom: 10px; line-height: 1.5;
+  max-width: 320px; margin-left: auto; margin-right: auto;
+}
+.action-divider { border: none; height: 1px; background: rgba(0,0,0,.1); margin: 14px 0 18px; }
+.action-buttons { display: flex; gap: 12px; justify-content: center; margin-bottom: 14px; }
+.action-btn {
+  flex: 1; max-width: 170px; min-height: 46px;
+  border: 2px solid #0060e6; border-radius: 4px;
+  background: #fff; color: #0060e6;
+  font-family: inherit; font-size: .85rem; font-weight: 700; letter-spacing: .04em;
+  cursor: pointer; transition: all .15s;
+}
+.action-ok { background: #0060e6; color: #fff; }
+.action-ok:hover:not(:disabled) { background: #004aa5; border-color: #004aa5; }
+.action-cancel { border-color: #888; color: #555; }
+.action-cancel:hover:not(:disabled) { background: #f2f2f2; }
+.action-btn:disabled { opacity: .55; cursor: default; }
+.action-security {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: .72rem; color: #777;
+}
+
+/* ── Besked-box (trin 1: "ny sikker besked") ── */
+.besked-box { text-align: center; padding: 10px 0 6px; }
+.besked-icon {
+  width: 72px; height: 72px; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  background: #ebf5ff; border-radius: 50%;
+}
+.besked-title { font-size: 1.05rem; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+.besked-sub { font-size: .8rem; color: #777; margin-bottom: 22px; }
+.besked-box .btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 44px; padding: 8px 28px;
+  border: none; border-radius: 4px;
+  background: #0060e6; color: #fff;
+  font-family: inherit; font-size: .85rem; font-weight: 600; letter-spacing: .04em;
+  cursor: pointer; transition: background .2s;
+}
+.besked-box .btn-primary:hover { background: #004aa5; }
+
+/* ── Security-info (fra step2.html) ── */
+.security-info {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .75rem; color: #666;
+  padding: 10px 12px;
+  background: #f7f7f7; border: 1px solid #e3e3e3; border-radius: 4px;
+  margin-bottom: 14px;
+}
+.security-info svg { flex-shrink: 0; color: #2e9e5b; }
+
+/* ── Help links (fra step2.html) ── */
+.help-links { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.help-links a { color: #0060e6; font-size: .8125rem; font-weight: 600; text-decoration: none; }
+.help-links a:hover { text-decoration: underline; }
+.help-links .separator { color: #ccc; }
+
+/* ── "Glemt bruger-ID?" / bottom-links (fra login (2).php) ── */
+.mitid-link-container { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.mitid-link__label { cursor: pointer; font-weight: 600; color: #0060e6; text-decoration: none; letter-spacing: .2px; font-size: .875rem; }
+.mitid-link__label:hover { text-decoration: underline; }
+
+.bottom-texts { display: flex; justify-content: flex-start; align-items: center; gap: 24px; }
+.bottom-texts button, .bottom-texts span {
+  font-weight: 700; font-size: .875rem; color: #000;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+}
+
+.forgot-popup {
+  position: absolute; top: auto; left: 30px;
+  width: 300px; background: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  border-radius: 8px; padding: 20px;
+  z-index: 500; display: none;
+}
+.forgot-popup.open { display: block; }
+.forgot-popup h2 { font-size: 1rem; font-weight: 700; color: #000; margin: 0 0 10px; }
+.forgot-popup p { font-size: .875rem; font-weight: 300; margin: 8px 0; }
+.forgot-popup a { color: #0060e6; font-size: .875rem; text-decoration: none; font-weight: 700; }
+.btn-close-popup { position: absolute; top: 8px; right: 10px; background: none; border: none; font-size: 18px; cursor: pointer; }
+
+.help-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 999; }
+.help-backdrop.open { display: block; }
+.help-popup {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 300px; background: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  border-radius: 8px; padding: 20px;
+  z-index: 1000; display: none;
+}
+.help-popup.open { display: block; }
+.help-popup h2 { font-size: 1rem; font-weight: 700; color: #000; margin: 0 0 8px; }
+.help-popup hr { margin: 8px 0; border: none; border-top: 1px solid #dee2e6; }
+.help-popup a { color: #0060e6; font-size: .875rem; text-decoration: none; font-weight: 700; display: block; margin-bottom: 8px; }
+
+/* ── Checkbox ── */
+.mitid-cb-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.mitid-cb-wrap input { width: 20px; height: 20px; border: 2px solid #000; border-radius: 4px; accent-color: #0060e6; cursor: pointer; }
+.mitid-checkbox__label { font-weight: 700; cursor: pointer; font-size: .875rem; }
+
+/* ── Højre info-paneler (1:1 fra login (2).php) ── */
+.info-header {
+  display: inline-flex; align-items: center;
+  border-radius: 5px 5px 0 0;
+  height: 23px; padding: 4px 10px;
+  background: #EBF6EB; font-weight: 700; font-size: .75rem;
+  font-family: "Verdana", sans-serif; width: max-content;
+  margin-bottom: 0;
+}
+.info-content {
+  border: 1px solid #e3e3e3;
+  padding: 12px; font-size: .75rem;
+  line-height: 1.5; margin-bottom: 16px;
+  font-family: "Verdana", sans-serif; color: #1a1a1a;
+}
+.info-content ul { list-style: none; padding: 0; margin: 0; }
+.info-content a { color: #0467AC; text-decoration: underline; }
+.info-content p { margin: 0 0 6px; }
+
+/* ── Responsivt (1:1 fra login (2).php) ── */
+@media(min-width:768px) {
+  #menuButton { display: none; }
+  .header-logo-center { display: block; }
+  .header-inner { justify-content: flex-end; }
+  .tab-section { display: block; }
+  .mitid-bar { display: none; }
+  .tall-box { margin: 20px auto; max-width: 490px; }
+}
+@media(max-width:600px) {
+  .tall-box { width: 100%; margin: 10px auto; padding: 15px; }
+  #qrcode { width: 180px; height: 180px; }
+}
+
+.hidden { display: none !important; }
